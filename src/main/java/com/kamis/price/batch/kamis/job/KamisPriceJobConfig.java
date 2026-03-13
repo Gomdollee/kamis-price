@@ -32,7 +32,9 @@ public class KamisPriceJobConfig {
     private final JdbcBatchItemWriter<PriceData> writer;
 
     /**
-     * Batch Job
+     * Batch Job 정의
+     *
+     * Job은 하나 이상의 Step으로 구성됨
      */
     @Bean
     public Job kamisPriceJob() {
@@ -43,16 +45,25 @@ public class KamisPriceJobConfig {
     }
 
     /**
-     * Batch Step
+     * Step 정의
+     *
+     * Reader → Processor → Writer 흐름
      */
     @Bean
     public Step kamisPriceStep() {
 
         return new StepBuilder("kamisPriceStep", jobRepository)
-                .<ExpandedPriceRow, PriceData>chunk(20, transactionManager)
+                .<ExpandedPriceRow, PriceData>chunk(100, transactionManager)
+
+                // 데이터 읽기
                 .reader(reader)
+
+                // 데이터 변환
                 .processor(processor)
+
+                // DB 저장
                 .writer(writer)
+
                 .build();
     }
 }

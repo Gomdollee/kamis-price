@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
+/**
+ * Batch Processor
+ *
+ * ExpandedPriceRow → PriceData Entity 변환
+ */
 @Component
 public class KamisItemProcessor implements ItemProcessor<ExpandedPriceRow, PriceData> {
 
@@ -36,6 +41,9 @@ public class KamisItemProcessor implements ItemProcessor<ExpandedPriceRow, Price
         return entity;
     }
 
+    /**
+     * 가격 문자열 → 숫자 변환
+     */
     private Integer parse(String price) {
 
         if (price == null || price.isBlank()) {

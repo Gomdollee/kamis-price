@@ -56,8 +56,6 @@ public class KamisItemWriter {
                       created_at = NOW()
                     """)
                 .beanMapped()
-
                 .build();
-
     }
 }

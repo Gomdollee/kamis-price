@@ -23,8 +23,8 @@ public class BatchController {
      */
     @PostMapping("/run")
     public BatchRunResponse runBatch(
-            @RequestParam(defaultValue = "200") String itemCategoryCode,
-            @RequestParam(required = false) String regDay
+            @RequestParam(name = "itemCategoryCode", defaultValue = "200") String itemCategoryCode,
+            @RequestParam(name = "regDay", required = false) String regDay
     ) {
         System.out.println(" 123 ");
         if (regDay == null || regDay.isBlank()) {
