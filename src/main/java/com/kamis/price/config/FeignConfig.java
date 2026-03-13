@@ -1,6 +1,7 @@
 package com.kamis.price.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.Logger;
 import feign.codec.Decoder;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
@@ -17,14 +18,11 @@ import java.util.List;
 public class FeignConfig {
 
     @Bean
-    public Decoder feignDecoder() {
-
-        ObjectMapper objectMapper = new ObjectMapper();
+    public Decoder feignDecoder(ObjectMapper objectMapper) {
 
         MappingJackson2HttpMessageConverter converter =
                 new MappingJackson2HttpMessageConverter(objectMapper);
 
-        // text/plain -> JSON 처리
         converter.setSupportedMediaTypes(
                 List.of(
                         MediaType.APPLICATION_JSON,
@@ -36,5 +34,10 @@ public class FeignConfig {
                 new HttpMessageConverters(converter);
 
         return new ResponseEntityDecoder(new SpringDecoder(() -> converters));
+    }
+
+    @Bean
+    Logger.Level feignLoggerLevel() {
+        return Logger.Level.FULL;
     }
 }

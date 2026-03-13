@@ -17,6 +17,12 @@ spring:
     jdbc:
       initialize-schema: always
 
+logging:
+  level:
+    com.kamis: DEBUG
+    feign: DEBUG
+    org.springframework.cloud.openfeign: DEBUG
+
 server:
   port: 8080
 

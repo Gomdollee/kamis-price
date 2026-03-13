@@ -23,30 +23,14 @@ public interface KamisFeignClient {
     KamisResponseDto getPriceList(
 
             @RequestParam("action") String action,
-
-            // 인증키
-            @RequestParam("p_cert_key") String certKey,
-
-            // 인증ID
-            @RequestParam("p_cert_id") String certId,
-
-            // 응답타입 (json)
-            @RequestParam("p_returntype") String returnType,
-
-            // 도매/소매 구분
-            @RequestParam("p_product_cls_code") String productClsCode,
-
-            // 품목 카테고리
-            @RequestParam("p_item_category_code") String categoryCode,
-
-            // 지역코드
-            @RequestParam("p_country_code") String countryCode,
-
-            // 조회 날짜
-            @RequestParam("p_regday") String regday,
-
-            // kg 변환 여부
-            @RequestParam("p_convert_kg_yn") String convertKgYn
+            @RequestParam("p_cert_key") String certKey,                     // 인증키
+            @RequestParam("p_cert_id") String certId,                       // 인증ID
+            @RequestParam("p_returntype") String returnType,                // 응답타입 (json)
+            @RequestParam("p_product_cls_code") String productClsCode,      // 도매/소매 구분
+            @RequestParam("p_item_category_code") String categoryCode,      // 품목 카테고리
+            @RequestParam("p_country_code") String countryCode,             // 지역코드
+            @RequestParam("p_regday") String regday,                        // 조회 날짜
+            @RequestParam("p_convert_kg_yn") String convertKgYn             // kg 변환 여부
 
     );
 }

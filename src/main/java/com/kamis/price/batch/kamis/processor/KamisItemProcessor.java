@@ -1,4 +1,47 @@
 package com.kamis.price.batch.kamis.processor;
 
-public class KamisItemProcessor {
+import com.kamis.price.batch.kamis.dto.ExpandedPriceRow;
+import com.kamis.price.domain.price.entity.PriceData;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+
+@Component
+public class KamisItemProcessor implements ItemProcessor<ExpandedPriceRow, PriceData> {
+
+    @Override
+    public PriceData process(ExpandedPriceRow item)  {
+
+        PriceData entity = new PriceData();
+
+        entity.setSourceType(item.getSourceType());
+        entity.setItemCode(item.getItemCode());
+        entity.setItemName(item.getItemName());
+
+        entity.setKindCode(item.getKindCode());
+        entity.setKindName(item.getKindName());
+
+        entity.setRank(item.getRank());
+
+        entity.setCountryCode(item.getCountryCode());
+        entity.setCountryName(item.getCountryName());
+
+        entity.setUnit(item.getUnit());
+
+        entity.setPrice(parse(item.getPriceRaw()));
+        entity.setPriceType(item.getPriceType());
+        entity.setRegDay(LocalDate.parse(item.getRegDay()));
+
+        return entity;
+    }
+
+    private Integer parse(String price) {
+
+        if (price == null || price.isBlank()) {
+            return null;
+        }
+
+        return Integer.parseInt(price.replace(",",""));
+     }
 }

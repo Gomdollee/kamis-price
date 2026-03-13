@@ -58,22 +58,22 @@ public class PriceData {
     private String kindName;
 
     /**
-     * 등급 코드
+     * 등급
      */
-    @Column(name = "rank_code")
-    private String rankCode;
+    @Column(name = "rank")
+    private String rank;
 
     /**
-     * 등급명
+     * 지역 코드
      */
-    @Column(name = "rank_name")
-    private String rankName;
+    @Column(name = "country_code")
+    private String countryCode;
 
     /**
      * 지역명
      */
-    @Column(name = "county_name")
-    private String countyName;
+    @Column(name = "country_name")
+    private String countryName;
 
     /**
      * 시장명

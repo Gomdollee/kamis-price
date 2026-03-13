@@ -22,7 +22,13 @@ public class KamisApiServiceTest {
     @Test
     void kamis_api_connection_test() {
 
-        List<KamisItemDto> items = kamisApiService.fetchPrices();
+        List<KamisItemDto> items = kamisApiService.fetchCategoryPrices(
+                "01",
+                "100",
+                "1101",
+                "2026-03-12"
+        );
+
 
         // 데이터 개수 확인
         System.out.println("item size = " +items.size());
