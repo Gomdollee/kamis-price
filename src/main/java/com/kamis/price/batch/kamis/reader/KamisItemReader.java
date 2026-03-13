@@ -2,7 +2,7 @@ package com.kamis.price.batch.kamis.reader;
 
 import com.kamis.price.batch.kamis.dto.ExpandedPriceRow;
 import com.kamis.price.batch.kamis.enums.CountryCode;
-import com.kamis.price.external.kamis.dto.KamisItemDto;
+import com.kamis.price.external.kamis.dto.KamisItem;
 import com.kamis.price.external.kamis.service.KamisApiService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -38,14 +38,14 @@ public class KamisItemReader implements ItemReader<ExpandedPriceRow> {
             for (String category : categoryCodes) {
                 for (CountryCode countryCode : CountryCode.values()) {
 
-                    List<KamisItemDto> items =
+                    List<KamisItem> items =
                             kamisApiService.fetchCategoryPrices(productCls, category, countryCode.getCode() , regDay);
 
                     if (items.isEmpty()) {
                         continue;
                     }
 
-                    for (KamisItemDto item : items) {
+                    for (KamisItem item : items) {
                         rows.addAll(expand(item, countryCode, regDay));
                     }
                 }
@@ -63,7 +63,7 @@ public class KamisItemReader implements ItemReader<ExpandedPriceRow> {
         return rows.get(index++);
     }
 
-    private List<ExpandedPriceRow> expand(KamisItemDto item, CountryCode countryCode , String regDay) {
+    private List<ExpandedPriceRow> expand(KamisItem item, CountryCode countryCode , String regDay) {
 
         List<ExpandedPriceRow> result = new ArrayList<>();
 
@@ -80,7 +80,7 @@ public class KamisItemReader implements ItemReader<ExpandedPriceRow> {
     }
 
     private void add(List<ExpandedPriceRow> list,
-                     KamisItemDto item,
+                     KamisItem item,
                      String regDay,
                      String type,
                      String price,

@@ -1,6 +1,6 @@
 package com.kamis.price.external.kamis;
 
-import com.kamis.price.external.kamis.dto.KamisItemDto;
+import com.kamis.price.external.kamis.dto.KamisItem;
 import com.kamis.price.external.kamis.service.KamisApiService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class KamisApiServiceTest {
     @Test
     void kamis_api_connection_test() {
 
-        List<KamisItemDto> items = kamisApiService.fetchCategoryPrices(
+        List<KamisItem> items = kamisApiService.fetchCategoryPrices(
                 "01",
                 "100",
                 "1101",

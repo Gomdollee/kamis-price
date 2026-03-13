@@ -1,6 +1,7 @@
 package com.kamis.price.external.kamis.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 import lombok.Getter;
 
 import java.util.List;
@@ -16,11 +17,13 @@ import java.util.List;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class KamisResponseDto {
+public class KamisResponse {
     
-    // 요청 조건 정보
-    private List<KamisConditionDto> condition;
+    private Data data;
 
-    // 실제 데이터 영역
-    private KamisDataDto data;
+    @Getter
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Data {
+        private List<KamisItem> item;
+    }
 }

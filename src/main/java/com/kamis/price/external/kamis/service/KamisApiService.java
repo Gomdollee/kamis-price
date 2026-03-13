@@ -1,16 +1,14 @@
 package com.kamis.price.external.kamis.service;
 
 import com.kamis.price.external.kamis.client.KamisFeignClient;
-import com.kamis.price.external.kamis.dto.KamisItemDto;
-import com.kamis.price.external.kamis.dto.KamisResponseDto;
+import com.kamis.price.external.kamis.dto.KamisItem;
+import com.kamis.price.external.kamis.dto.KamisResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +32,7 @@ public class KamisApiService {
      * @param categoryCode   100~600
      * @param regDay         yyyy-MM-dd
      */
-    public List<KamisItemDto> fetchCategoryPrices(String productClsCode, String categoryCode, String countryCode, String regDay) {
+    public List<KamisItem> fetchCategoryPrices(String productClsCode, String categoryCode, String countryCode, String regDay) {
 
         if (mock) {
             return createMockData();
@@ -42,7 +40,7 @@ public class KamisApiService {
 
         try {
 
-            KamisResponseDto response = kamisFeignClient.getPriceList(
+            KamisResponse response = kamisFeignClient.getPriceList(
                     "dailyPriceByCategoryList",
                     apiKey,
                     apiId,
@@ -53,8 +51,6 @@ public class KamisApiService {
                     regDay,
                     "N"
             );
-
-
 
             if (response == null || response.getData() == null || response.getData().getItem() == null) {
                 return Collections.emptyList();
@@ -69,7 +65,7 @@ public class KamisApiService {
 
     }
 
-    private List<KamisItemDto> createMockData() {
+    private List<KamisItem> createMockData() {
         return List.of();
     }
 }
