@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
         name = "kamisClient",
-        url = "${kamis.api.url}",
+        url = "${kamis.api.base-url}",
         configuration = FeignConfig.class
 )
 public interface KamisFeignClient {

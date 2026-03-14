@@ -26,12 +26,9 @@ public class BatchController {
             @RequestParam(name = "itemCategoryCode", defaultValue = "200") String itemCategoryCode,
             @RequestParam(name = "regDay", required = false) String regDay
     ) {
-        System.out.println(" 123 ");
         if (regDay == null || regDay.isBlank()) {
             regDay = LocalDate.now().toString();
         }
-
-        System.out.println("Batch API 호출됨");
 
         return batchService.runBatch(itemCategoryCode, regDay);
     }

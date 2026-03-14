@@ -1,5 +1,6 @@
 package com.kamis.price.external.kamis.service;
 
+import com.kamis.price.config.KamisApiProperties;
 import com.kamis.price.external.kamis.client.KamisFeignClient;
 import com.kamis.price.external.kamis.dto.KamisItem;
 import com.kamis.price.external.kamis.dto.KamisResponse;
@@ -15,15 +16,7 @@ import java.util.List;
 public class KamisApiService {
 
     private final KamisFeignClient kamisFeignClient;
-
-    @Value("${kamis.api.key}")
-    private String apiKey;
-
-    @Value("${kamis.api.id}")
-    private String apiId;
-
-    @Value("${kamis.mock:false}")
-    private boolean mock;
+    private final KamisApiProperties kamisApiProperties;
 
     /**
      * 부류별 가격 API 호출
@@ -34,7 +27,7 @@ public class KamisApiService {
      */
     public List<KamisItem> fetchCategoryPrices(String productClsCode, String categoryCode, String countryCode, String regDay) {
 
-        if (mock) {
+        if (kamisApiProperties.isMockMode()) {
             return createMockData();
         }
 
@@ -42,8 +35,8 @@ public class KamisApiService {
 
             KamisResponse response = kamisFeignClient.getPriceList(
                     "dailyPriceByCategoryList",
-                    apiKey,
-                    apiId,
+                    kamisApiProperties.getCertKey(),
+                    kamisApiProperties.getCertId(),
                     "json",
                     productClsCode,
                     categoryCode,
@@ -65,6 +58,9 @@ public class KamisApiService {
 
     }
 
+    /**
+     * Mock 데이터 생성
+     */
     private List<KamisItem> createMockData() {
         return List.of();
     }

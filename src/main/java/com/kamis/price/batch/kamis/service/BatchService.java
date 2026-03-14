@@ -33,20 +33,19 @@ public class BatchService {
      */
     public BatchRunResponse runBatch(String itemCategoryCode, String regDay) {
 
-        System.out.println(" ?? ");
-
         try {
 
             JobParameters parameters =
                     new JobParametersBuilder()
                             .addString("itemCategoryCode", itemCategoryCode)
                             .addString("regDay", regDay)
-                            .addLong("time", System.currentTimeMillis())
                             .toJobParameters();
 
             JobExecution execution = jobLauncher.run(kamisPriceJob, parameters);
 
             return BatchRunResponse.builder()
+                    .success(true)
+                    .message("배치 실행 완료")
                     .jobId(execution.getJobId())
                     .status(execution.getStatus().name())
                     .startTime(execution.getStartTime())
@@ -70,6 +69,7 @@ public class BatchService {
      */
     public BatchStatusResponse getBatchStatus() {
 
+        // 최근 JobInstance 조회 (최대10개)
         List<JobInstance> instances =
                 jobExplorer.getJobInstances("kamisPriceJob", 0, 10);
 
@@ -82,23 +82,7 @@ public class BatchService {
 
             for (JobExecution execution : executions) {
 
-                Map<String, Object> params = new HashMap<>();
-
-                execution.getJobParameters()
-                        .getParameters()
-                        .forEach((k, v) -> params.put(k, v.getValue()));
-
-                data.add(
-                        JobStatusDto.builder()
-                                .jobInstanceId(instance.getInstanceId())
-                                .jobName(execution.getJobInstance().getJobName())
-                                .status(execution.getStatus().name())
-                                .startTime(execution.getStartTime())
-                                .endTime(execution.getEndTime())
-                                .exitCode(execution.getExitStatus().getExitCode())
-                                .params(params)
-                                .build()
-                );
+                data.add(convertToDto(instance, execution));
             }
         }
 
@@ -108,6 +92,28 @@ public class BatchService {
                 .mockMode(kamisApiProperties.isMockMode())
                 .apiConfigured(kamisApiProperties.isConfigured())
                 .data(data)
+                .build();
+    }
+
+    private JobStatusDto convertToDto(
+            JobInstance instance,
+            JobExecution execution
+    ) {
+
+        Map<String, Object> params = new HashMap<>();
+
+        execution.getJobParameters()
+                .getParameters()
+                .forEach((k, v) -> params.put(k, v.getValue()));
+
+        return JobStatusDto.builder()
+                .jobInstanceId(instance.getInstanceId())
+                .jobName(instance.getJobName())
+                .status(execution.getStatus().name())
+                .startTime(execution.getStartTime())
+                .endTime(execution.getEndTime())
+                .exitCode(execution.getExitStatus().getExitCode())
+                .params(params)
                 .build();
     }
 

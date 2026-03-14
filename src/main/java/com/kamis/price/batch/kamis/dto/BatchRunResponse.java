@@ -20,4 +20,5 @@ public class BatchRunResponse {
     private String regDay;
 
     private boolean mockMode;
+
 }
