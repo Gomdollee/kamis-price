@@ -1,6 +1,7 @@
 package com.kamis.price.external.kamis.client;
 
 import com.kamis.price.config.FeignConfig;
+import com.kamis.price.external.kamis.dto.KamisMonthlyResponse;
 import com.kamis.price.external.kamis.dto.KamisResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 )
 public interface KamisFeignClient {
 
+    /**
+     * 일별 부류별 도.소매가격정보
+     */
     @GetMapping("/service/price/xml.do")
     KamisResponse getPriceList(
 
@@ -32,5 +36,19 @@ public interface KamisFeignClient {
             @RequestParam("p_regday") String regday,                        // 조회 날짜
             @RequestParam("p_convert_kg_yn") String convertKgYn             // kg 변환 여부
 
+    );
+
+    /**
+     * 월별 도.소매가격정보 (※ 축평원 데이터는 제외됨)
+     */
+    @GetMapping("/service/price/xml.do")
+    KamisMonthlyResponse fetchMonthlyPrices(
+
+            @RequestParam("action") String action,
+            @RequestParam("p_cert_key") String certKey,
+            @RequestParam("p_cert_id") String certId,
+            @RequestParam("p_returntype") String returnType,
+            @RequestParam("p_yyyy") String yyyy,
+            @RequestParam("p_itemcategorycode") String categoryCode
     );
 }

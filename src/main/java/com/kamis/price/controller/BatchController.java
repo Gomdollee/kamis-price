@@ -49,4 +49,17 @@ public class BatchController {
         return batchService.getBatchConfig();
     }
 
+    @PostMapping("/run-monthly")
+    public BatchRunResponse runMonthlyBatch(
+
+            @RequestParam(name = "itemCategoryCode") String itemCategoryCode,
+            @RequestParam(name = "yyyy")String yyyy
+    ) {
+
+        return batchService.runMonthlyBatch(
+                itemCategoryCode,
+                yyyy
+        );
+    }
+
 }

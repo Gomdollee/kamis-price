@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,16 +18,28 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class BatchService {
 
     private final JobLauncher jobLauncher;
-
     private final Job kamisPriceJob;
-
+    private final Job kamisMonthlyPriceJob;
     private final JobExplorer jobExplorer;
-
     private final KamisApiProperties kamisApiProperties;
+
+    public BatchService(
+            JobLauncher jobLauncher,
+            @Qualifier("kamisPriceJob") Job kamisPriceJob,
+            @Qualifier("kamisMonthlyPriceJob") Job kamisMonthlyPriceJob,
+            JobExplorer jobExplorer,
+            KamisApiProperties kamisApiProperties
+    ) {
+        this.jobLauncher = jobLauncher;
+        this.kamisPriceJob = kamisPriceJob;
+        this.kamisMonthlyPriceJob = kamisMonthlyPriceJob;
+        this.jobExplorer = jobExplorer;
+        this.kamisApiProperties = kamisApiProperties;
+    }
+
 
     /**
      * 배치 실행
@@ -130,6 +143,43 @@ public class BatchService {
                 .certIdSet(kamisApiProperties.getCertId() != null)
                 .build();
     }
+
+    /**
+     * * 월별 도.소매가격정보 (※ 축평원 데이터는 제외됨)
+     */
+    public BatchRunResponse runMonthlyBatch(
+            String itemCategoryCode,
+            String yyyy
+    ) {
+
+        try {
+
+            JobParameters parameters =
+                    new JobParametersBuilder()
+                            .addString("itemCategoryCode", itemCategoryCode)
+                            .addString("yyyy", yyyy)
+                            .addLong("run.id", System.currentTimeMillis())
+                            .toJobParameters();
+
+            JobExecution execution =
+                    jobLauncher.run(kamisMonthlyPriceJob, parameters);
+
+            return BatchRunResponse.builder()
+                    .success(true)
+                    .message("월별 배치 실행 완료")
+                    .jobId(execution.getJobId())
+                    .status(execution.getStatus().name())
+                    .build();
+
+        } catch (Exception e) {
+
+            return BatchRunResponse.builder()
+                    .success(false)
+                    .message("월별 배치 실행 실패")
+                    .build();
+        }
+    }
+
 
 }
 
