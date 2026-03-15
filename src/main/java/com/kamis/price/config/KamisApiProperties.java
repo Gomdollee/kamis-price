@@ -6,7 +6,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * application.yml 의 kamis.api 설정을 매핑
+ * KAMIS API 설정 클래스
+ *
+ * application.yml 의
+ *
+ * kamis.api.*
+ *
+ * 설정을 자동으로 매핑한다.
  */
 @Getter
 @Setter

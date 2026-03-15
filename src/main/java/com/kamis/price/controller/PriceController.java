@@ -30,7 +30,7 @@ public class PriceController {
      * GET /api/prices?regDay=yyyy-MM-dd
      */
     @GetMapping
-    public ApiResponse<List<PriceData>> getPricesByDate(@RequestParam String regDay) {
+    public ApiResponse<List<PriceData>> getPricesByDate(@RequestParam(name = "regDay") String regDay) {
 
         List<PriceData> data = service.findByDate(regDay);
 

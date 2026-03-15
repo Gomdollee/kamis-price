@@ -8,12 +8,25 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 
+
+/**
+ * Batch Writer
+ *
+ * Processor에서 변환된 PriceData를
+ * DB에 batch insert
+ */
 @Configuration
 public class KamisItemWriter {
 
     @Bean
     public JdbcBatchItemWriter<PriceData> kamisWriter(DataSource dataSource) {
 
+        /**
+         * batch insert SQL
+         *
+         * ON DUPLICATE KEY UPDATE
+         * → 동일 데이터 존재 시 price 업데이트
+         */
         return new JdbcBatchItemWriterBuilder<PriceData>()
                 .dataSource(dataSource)
                 .sql("""
@@ -55,7 +68,13 @@ public class KamisItemWriter {
                       price = VALUES(price),
                       created_at = NOW()
                     """)
+
+
+                /**
+                 * Bean property → SQL 파라미터 매핑
+                 */
                 .beanMapped()
+
                 .build();
     }
 }

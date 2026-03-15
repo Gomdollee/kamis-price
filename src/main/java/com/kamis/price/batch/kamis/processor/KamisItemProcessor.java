@@ -11,6 +11,9 @@ import java.time.LocalDate;
  * Batch Processor
  *
  * ExpandedPriceRow → PriceData Entity 변환
+ *
+ *  Reader가 읽어온 데이터를
+ *  DB 저장 가능한 Entity로 변환
  */
 @Component
 public class KamisItemProcessor implements ItemProcessor<ExpandedPriceRow, PriceData> {

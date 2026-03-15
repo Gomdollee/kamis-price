@@ -21,7 +21,7 @@ import java.util.List;
  * 역할
  *  1.KAMIS API 호출
  *  2.응답 데이터를 DB row 단위로 변환
- *  3.하나씩 반환
+ *  3.Spring Batch가 read()를 반복 호출하면서 데이터를 하나씩 가져감
  */
 @Component
 @StepScope
@@ -48,6 +48,8 @@ public class KamisItemReader implements ItemReader<ExpandedPriceRow> {
 
     /**
      * Spring Batch에서 read()가 반복 호출됨
+     *
+     * 데이터가 끝나면 null 반환
      */
     @Override
     public ExpandedPriceRow read() {
@@ -74,6 +76,9 @@ public class KamisItemReader implements ItemReader<ExpandedPriceRow> {
             regDay = LocalDate.now().toString();
         }
 
+        /**
+         * 도매 / 소매
+         */
         List<String> productClsCodes = List.of("02", "01");
 
         for (String productCls : productClsCodes) {
@@ -101,7 +106,9 @@ public class KamisItemReader implements ItemReader<ExpandedPriceRow> {
     }
 
     /**
-     * KAMIS item → 여러 row로 확장
+     * KAMIS 응답 1건 → 여러 price row로 확장
+     *
+     * dpr1 ~ dpr7 가격을 각각 row로 생성
      */
     private List<ExpandedPriceRow> expand(KamisItem item, CountryCode countryCode) {
 
@@ -119,7 +126,7 @@ public class KamisItemReader implements ItemReader<ExpandedPriceRow> {
     }
 
     /**
-     * Row 생성
+     * ExpandedPriceRow 생성
      */
     private void add(
             List<ExpandedPriceRow> list,
