@@ -32,3 +32,6 @@ kamis:
     cert-key: 5a80d6c4-06de-4e55-96ed-baefbd3ace87
     cert-id: 2791
     mock-mode: false
+  batch:
+    schedule:
+      daily-cron: "0 0 9 * * *"
