@@ -98,13 +98,10 @@ public class KamisPriceJobConfig {
 
                 // 데이터 읽기
                 .reader(reader)
-
                 // 데이터 변환
                 .processor(processor)
-
                 // DB 저장
                 .writer(writer)
-
                 .build();
     }
 }

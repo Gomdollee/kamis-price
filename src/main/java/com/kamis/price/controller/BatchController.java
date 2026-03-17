@@ -41,25 +41,5 @@ public class BatchController {
         return batchService.getBatchStatus();
     }
 
-    /**
-     * API 설정 확인
-     */
-    @GetMapping("/config")
-    public BatchConfigResponse getConfig() {
-        return batchService.getBatchConfig();
-    }
-
-    @PostMapping("/run-monthly")
-    public BatchRunResponse runMonthlyBatch(
-
-            @RequestParam(name = "itemCategoryCode") String itemCategoryCode,
-            @RequestParam(name = "yyyy")String yyyy
-    ) {
-
-        return batchService.runMonthlyBatch(
-                itemCategoryCode,
-                yyyy
-        );
-    }
 
 }

@@ -82,9 +82,7 @@ public class KamisItemReader implements ItemReader<ExpandedPriceRow> {
         List<String> productClsCodes = List.of("02", "01");
 
         for (String productCls : productClsCodes) {
-
             for (CountryCode countryCode : CountryCode.values()) {
-
                 List<KamisItem> items =
                         kamisApiService.fetchCategoryPrices(
                                 productCls,
@@ -92,9 +90,7 @@ public class KamisItemReader implements ItemReader<ExpandedPriceRow> {
                                 countryCode.getCode(),
                                 regDay
                         );
-
                 for (KamisItem item : items) {
-
                     result.addAll(
                             expand(item, countryCode)
                     );

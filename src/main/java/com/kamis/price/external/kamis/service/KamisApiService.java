@@ -3,11 +3,8 @@ package com.kamis.price.external.kamis.service;
 import com.kamis.price.config.KamisApiProperties;
 import com.kamis.price.external.kamis.client.KamisFeignClient;
 import com.kamis.price.external.kamis.dto.KamisItem;
-import com.kamis.price.external.kamis.dto.KamisMonthlyItem;
-import com.kamis.price.external.kamis.dto.KamisMonthlyResponse;
 import com.kamis.price.external.kamis.dto.KamisResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -67,32 +64,5 @@ public class KamisApiService {
         return List.of();
     }
 
-    /**
-     * 월별 도.소매가격정보 (※ 축평원 데이터는 제외됨)
-     */
-    public List<KamisMonthlyItem> fetchMonthlyPrices(
-            String categoryCode,
-            String yyyy
-    ) {
-
-        KamisMonthlyResponse response =
-                kamisFeignClient.fetchMonthlyPrices(
-                        "monthlySalesList",
-                        kamisApiProperties.getCertKey(),
-                        kamisApiProperties.getCertId(),
-                        "json",
-                        yyyy,
-                        categoryCode
-                );
-
-        if (response == null
-                || response.getPrice() == null
-                || response.getPrice().getPrice() == null) {
-
-            return Collections.emptyList();
-        }
-
-        return response.getPrice().getPrice();
-    }
 
 }
