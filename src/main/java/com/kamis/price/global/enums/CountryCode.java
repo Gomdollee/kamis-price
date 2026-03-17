@@ -1,4 +1,4 @@
-package com.kamis.price.batch.kamis.enums;
+package com.kamis.price.global.enums;
 
 import lombok.Getter;
 

@@ -2,8 +2,7 @@ package com.kamis.price.external.kamis.service;
 
 import com.kamis.price.config.KamisApiProperties;
 import com.kamis.price.external.kamis.client.KamisFeignClient;
-import com.kamis.price.external.kamis.dto.KamisItem;
-import com.kamis.price.external.kamis.dto.KamisResponse;
+import com.kamis.price.external.kamis.dto.KamisResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,51 +17,47 @@ public class KamisApiService {
     private final KamisApiProperties kamisApiProperties;
 
     /**
-     * 부류별 가격 API 호출
-     *
-     * @param productClsCode 01: 소매, 02: 도매
-     * @param categoryCode   100~600
-     * @param regDay         yyyy-MM-dd
+     * Kamis API 전체 응답 반환
      */
-    public List<KamisItem> fetchCategoryPrices(String productClsCode, String categoryCode, String countryCode, String regDay) {
+    public KamisResponseDto fetchCategoryPrices(String productClsCode, String categoryCode, String countryCode, String regDay) {
 
-        if (kamisApiProperties.isMockMode()) {
-            return createMockData();
-        }
+        KamisResponseDto response = kamisFeignClient.getPriceList(
+                "dailyPriceByCategoryList",
+                kamisApiProperties.getCertKey(),
+                kamisApiProperties.getCertId(),
+                "json",
+                productClsCode,
+                categoryCode,
+                countryCode,
+                regDay,
+                "N"
+        );
 
-        try {
+        validateResponse(response);
 
-            KamisResponse response = kamisFeignClient.getPriceList(
-                    "dailyPriceByCategoryList",
-                    kamisApiProperties.getCertKey(),
-                    kamisApiProperties.getCertId(),
-                    "json",
-                    productClsCode,
-                    categoryCode,
-                    countryCode,
-                    regDay,
-                    "N"
-            );
-
-            if (response == null || response.getData() == null || response.getData().getItem() == null) {
-                return Collections.emptyList();
-            }
-
-            return response.getData().getItem();
-
-        } catch (Exception e) {
-
-            return Collections.emptyList();
-        }
-
+        return response;
     }
 
     /**
-     * Mock 데이터 생성
+     * 응답 검증
      */
-    private List<KamisItem> createMockData() {
-        return List.of();
-    }
+    public void validateResponse(KamisResponseDto response) {
 
+        if (response == null) {
+            throw new RuntimeException("KAMIS API response is null");
+        }
+
+        if (response.getData() == null) {
+            throw new RuntimeException("KAMIS API data is null");
+        }
+
+        if (!"000".equals(response.getData().getErrorCode())) {
+            throw new RuntimeException("KAMIS API error: " + response.getData().getErrorCode());
+        }
+
+        if (response.getData().getItem() == null) {
+            throw new RuntimeException("KAMIS API item is null");
+        }
+    }
 
 }

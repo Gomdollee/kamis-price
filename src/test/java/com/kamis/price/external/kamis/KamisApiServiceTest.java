@@ -1,47 +1,35 @@
 package com.kamis.price.external.kamis;
 
-import com.kamis.price.external.kamis.dto.KamisItem;
+import com.kamis.price.external.kamis.dto.KamisResponseDto;
 import com.kamis.price.external.kamis.service.KamisApiService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class KamisApiServiceTest {
 
     @Autowired
-    KamisApiService kamisApiService;
+    private KamisApiService kamisApiService;
 
-    /**
-     * 외부 KAMIS API 실제 호출 테스트
-     */
     @Test
-    void kamis_api_connection_test() {
+    void Kamis_API_호출_테스트() {
 
-        List<KamisItem> items = kamisApiService.fetchCategoryPrices(
-                "01",
-                "100",
-                "1101",
-                "2026-03-12"
-        );
+        KamisResponseDto response =
+                kamisApiService.fetchCategoryPrices(
+                        "02",
+                        "200",
+                        "1101",
+                        "2024-01-01"
+                );
 
+        assertNotNull(response);
+        assertNotNull(response.getData());
+        assertEquals("000", response.getData().getErrorCode());
+        assertFalse(response.getData().getItem().isEmpty());
 
-        // 데이터 개수 확인
-        System.out.println("item size = " +items.size());
-
-        // 데이터 출력
-        items.stream()
-                .limit(5)
-                .forEach(item -> {
-                    System.out.println(
-                            item.getItem_name() + "/" + item.getDpr1()
-                    );
-                });
-
-        assertFalse(items.isEmpty());
+        System.out.println(response.getData().getItem().get(0).getItemName());
     }
 }

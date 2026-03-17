@@ -1,7 +1,7 @@
 package com.kamis.price.external.kamis.client;
 
 import com.kamis.price.config.FeignConfig;
-import com.kamis.price.external.kamis.dto.KamisResponse;
+import com.kamis.price.external.kamis.dto.KamisResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +23,7 @@ public interface KamisFeignClient {
      * 일별 부류별 도.소매가격정보
      */
     @GetMapping("/service/price/xml.do")
-    KamisResponse getPriceList(
+    KamisResponseDto getPriceList(
 
             @RequestParam("action") String action,
             @RequestParam("p_cert_key") String certKey,                     // 인증키

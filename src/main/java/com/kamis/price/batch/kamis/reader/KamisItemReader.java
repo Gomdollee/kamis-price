@@ -1,10 +1,7 @@
 package com.kamis.price.batch.kamis.reader;
 
 import com.kamis.price.batch.kamis.dto.ExpandedPriceRow;
-import com.kamis.price.batch.kamis.enums.CountryCode;
-import com.kamis.price.external.kamis.dto.KamisItem;
 import com.kamis.price.external.kamis.service.KamisApiService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemReader;
