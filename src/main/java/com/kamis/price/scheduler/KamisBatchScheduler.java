@@ -1,5 +1,6 @@
 package com.kamis.price.scheduler;
 
+import com.kamis.price.domain.raw.service.KamisRawService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -19,42 +20,10 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class KamisBatchScheduler {
 
-    private final JobLauncher jobLauncher;
+    private  final KamisRawService rawService;
 
-    @Qualifier("kamisPriceJob")
-    private final Job kamisPriceJob;
-
-    @Value("${kamis.default-category:100}")
-    private String itemCategoryCode;
-
-    /**
-     * 매일 오전 9시
-     */
-    @Scheduled(cron = "${kamis.batch.schedule.daily-cron}")
-    public void scheduleDailyPriceFetch() {
-
-        try {
-
-            log.info("KAMIS 일별 가격 배치 시작");
-
-            String today = LocalDate.now().toString();
-
-            JobParameters parameters =
-                    new JobParametersBuilder()
-                            .addString("itemCategoryCode", itemCategoryCode)
-                            .addString("regDay", today)
-                            .addLong("run.id", System.currentTimeMillis())
-                            .toJobParameters();
-
-            JobExecution execution =
-                    jobLauncher.run(kamisPriceJob, parameters);
-
-            log.info("KAMIS 배치 완료 status={}", execution.getStatus());
-
-        } catch (Exception e) {
-
-            log.error("KAMIS 배치 실행 실패", e);
-
-        }
+    @Scheduled(cron = "0 0 9 * * *")
+    public void run() {
+        rawService.collectAll();
     }
 }

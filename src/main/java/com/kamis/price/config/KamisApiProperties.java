@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
  */
 @Getter
 @Setter
-@Component
 @ConfigurationProperties(prefix = "kamis.api")
 public class KamisApiProperties {
 

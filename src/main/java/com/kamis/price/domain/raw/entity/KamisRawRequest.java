@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,7 +22,7 @@ public class KamisRawRequest {
 
     private String productClsCode;
     private String countryCode;
-    private String regday;
+    private LocalDate regday;
     private String convertKgYn;
     private String categoryCode;
 
@@ -41,19 +42,25 @@ public class KamisRawRequest {
     private String processingErrorMessage;
 
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @Builder
     private KamisRawRequest(
             String productClsCode,
             String countryCode,
-            String regday,
+            LocalDate regday,
             String convertKgYn,
             String categoryCode,
             String certKey,
             String certId,
             String returnType,
             String errorCode,
-            String rawJson
+            String rawJson,
+            RawStatus processingStatus,
+            int processingRetryCount,
+            String processingErrorMessage,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
     ) {
         this.productClsCode = productClsCode;
         this.countryCode = countryCode;
@@ -65,18 +72,23 @@ public class KamisRawRequest {
         this.returnType = returnType;
         this.errorCode = errorCode;
         this.rawJson = rawJson;
-        this.processingStatus = RawStatus.READY;
-        this.createdAt = LocalDateTime.now();
+        this.processingStatus = processingStatus;
+        this.processingRetryCount = processingRetryCount;
+        this.processingErrorMessage = processingErrorMessage;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public static KamisRawRequest create(
             String productClsCode,
             String categoryCode,
             String countryCode,
-            String regday,
+            LocalDate regday,
             String certKey,
             String certId
     ) {
+        LocalDateTime now = LocalDateTime.now();
+
         return KamisRawRequest.builder()
                 .productClsCode(productClsCode)
                 .categoryCode(categoryCode)
@@ -86,16 +98,24 @@ public class KamisRawRequest {
                 .certKey(certKey)
                 .certId(certId)
                 .returnType("json")
+                .processingStatus(RawStatus.READY)
+                .processingRetryCount(0)
+                .createdAt(now)
+                .updatedAt(now)
                 .build();
+    }
+
+    public void complete(String errorCode, String rawJson) {
+        this.errorCode = errorCode;
+        this.rawJson = rawJson;
+        this.processingStatus = RawStatus.PROCESSED;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void markFailed(String message) {
         this.processingStatus = RawStatus.FAILED;
         this.processingRetryCount++;
         this.processingErrorMessage = message;
-    }
-
-    public void markProcessed() {
-        this.processingStatus = RawStatus.PROCESSED;
+        this.updatedAt = LocalDateTime.now();
     }
 }

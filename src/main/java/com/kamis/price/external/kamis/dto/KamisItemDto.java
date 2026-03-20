@@ -20,8 +20,10 @@ public class KamisItemDto {
     @JsonProperty("kind_code")
     private String kindCode;
 
-    @JsonProperty("rank_code")
+    @JsonProperty("rank")
     private String rank;
+
+    @JsonProperty("rank_code")
     private String rankCode;
 
     private String unit;

@@ -1,15 +1,14 @@
-package com.kamis.price.batch.kamis.service;
+package com.kamis.price.batch.kamis.price.service;
 
-import com.kamis.price.batch.kamis.dto.BatchConfigResponse;
-import com.kamis.price.batch.kamis.dto.BatchRunResponse;
-import com.kamis.price.batch.kamis.dto.BatchStatusResponse;
-import com.kamis.price.batch.kamis.dto.JobStatusDto;
+import com.kamis.price.batch.kamis.price.dto.BatchConfigResponse;
+import com.kamis.price.batch.kamis.price.dto.BatchRunResponse;
+import com.kamis.price.batch.kamis.price.dto.BatchStatusResponse;
+import com.kamis.price.batch.kamis.price.dto.JobStatusDto;
 import com.kamis.price.config.KamisApiProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

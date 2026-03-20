@@ -8,19 +8,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(
         name = "kamis_raw_item",
         uniqueConstraints = @UniqueConstraint(
+                name = "uk_kamis_raw_item_unique",
                 columnNames = {
-                        "item_code", "kind_code", "rank_code",
-                        "regday", "country_code"
+                        "item_code", "kind_code", "rank_code", "regday", "country_code"
                 }
         )
 )
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class KamisRawItem {
@@ -29,12 +29,12 @@ public class KamisRawItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "request_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "request_id", nullable = false)
     private KamisRawRequest request;
 
     private String countryCode;
-    private String regday;
+    private LocalDate regday;
     private String categoryCode;
 
     private String itemName;
@@ -43,7 +43,9 @@ public class KamisRawItem {
     private String kindName;
     private String kindCode;
 
+    @Column(name = "rank_name")
     private String rank;
+
     private String rankCode;
 
     private String unit;
@@ -69,9 +71,6 @@ public class KamisRawItem {
     private String day7;
     private String dpr7;
 
-    @Lob
-    private String rawJson;
-
     @Enumerated(EnumType.STRING)
     private RawStatus processingStatus;
 
@@ -79,13 +78,14 @@ public class KamisRawItem {
     private String processingErrorMessage;
 
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @Builder
     private KamisRawItem(
             KamisRawRequest request,
             String categoryCode,
             String countryCode,
-            String regday,
+            LocalDate regday,
             String itemName,
             String itemCode,
             String kindName,
@@ -100,13 +100,16 @@ public class KamisRawItem {
             String day5, String dpr5,
             String day6, String dpr6,
             String day7, String dpr7,
-            String rawJson
+            RawStatus processingStatus,
+            int processingRetryCount,
+            String processingErrorMessage,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
     ) {
         this.request = request;
         this.categoryCode = categoryCode;
         this.countryCode = countryCode;
         this.regday = regday;
-
         this.itemName = itemName;
         this.itemCode = itemCode;
         this.kindName = kindName;
@@ -114,7 +117,6 @@ public class KamisRawItem {
         this.rank = rank;
         this.rankCode = rankCode;
         this.unit = unit;
-
         this.day1 = day1;
         this.dpr1 = dpr1;
         this.day2 = day2;
@@ -129,10 +131,11 @@ public class KamisRawItem {
         this.dpr6 = dpr6;
         this.day7 = day7;
         this.dpr7 = dpr7;
-
-        this.rawJson = rawJson;
-        this.processingStatus = RawStatus.READY;
-        this.createdAt = LocalDateTime.now();
+        this.processingStatus = processingStatus;
+        this.processingRetryCount = processingRetryCount;
+        this.processingErrorMessage = processingErrorMessage;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public static KamisRawItem from(
@@ -140,9 +143,10 @@ public class KamisRawItem {
             KamisItemDto item,
             String categoryCode,
             String countryCode,
-            String regday,
-            String rawJson
+            LocalDate regday
     ) {
+        LocalDateTime now = LocalDateTime.now();
+
         return KamisRawItem.builder()
                 .request(request)
                 .categoryCode(categoryCode)
@@ -169,18 +173,23 @@ public class KamisRawItem {
                 .dpr6(item.getDpr6())
                 .day7(item.getDay7())
                 .dpr7(item.getDpr7())
-                .rawJson(rawJson)
+                .processingStatus(RawStatus.READY)
+                .processingRetryCount(0)
+                .createdAt(now)
+                .updatedAt(now)
                 .build();
     }
 
     public void markProcessed() {
         this.processingStatus = RawStatus.PROCESSED;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void markFailed(String message) {
         this.processingStatus = RawStatus.FAILED;
         this.processingRetryCount++;
         this.processingErrorMessage = message;
+        this.updatedAt = LocalDateTime.now();
     }
 
 }

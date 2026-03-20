@@ -1,4 +1,4 @@
-package com.kamis.price.batch.kamis.dto;
+package com.kamis.price.batch.kamis.price.dto;
 
 import lombok.Builder;
 import lombok.Getter;

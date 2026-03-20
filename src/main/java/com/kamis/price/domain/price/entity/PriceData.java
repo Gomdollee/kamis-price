@@ -1,6 +1,8 @@
 package com.kamis.price.domain.price.entity;
 
+import com.kamis.price.domain.raw.entity.KamisRawItem;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +18,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "price_data")
 @Getter
-@Setter
 @NoArgsConstructor
 public class PriceData {
 
@@ -124,12 +125,54 @@ public class PriceData {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    /**
-     * 데이터 저장 시 자동 실행
-     */
-    @PrePersist
-    public void onCreate() {
+    @Builder
+    private PriceData(
+            String sourceType,
+            String itemCode,
+            String itemName,
+            String kindCode,
+            String kindName,
+            String rank,
+            String countryCode,
+            String countryName,
+            String marketName,
+            String unit,
+            Integer price,
+            LocalDate regDay,
+            String priceType
+    ) {
+        this.sourceType = sourceType;
+        this.itemCode = itemCode;
+        this.itemName = itemName;
+        this.kindCode = kindCode;
+        this.kindName = kindName;
+        this.rank = rank;
+        this.countryCode = countryCode;
+        this.countryName = countryName;
+        this.marketName = marketName;
+        this.unit = unit;
+        this.price = price;
+        this.regDay = regDay;
+        this.priceType = priceType;
         this.createdAt = LocalDateTime.now();
+    }
+
+    public static PriceData from(KamisRawItem item, int price) {
+        return PriceData.builder()
+                .sourceType("CATEGORY")
+                .itemCode(item.getItemCode())
+                .itemName(item.getItemName())
+                .kindCode(item.getKindCode())
+                .kindName(item.getKindName())
+                .rank(item.getRank())
+                .countryCode(item.getCountryCode())
+                .countryName(null) // 필요하면 enum 매핑
+                .marketName(null)
+                .unit(item.getUnit())
+                .price(price)
+                .regDay(LocalDate.parse(item.getRegday()))
+                .priceType("DAY1")
+                .build();
     }
 
 

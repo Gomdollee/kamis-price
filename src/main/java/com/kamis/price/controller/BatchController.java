@@ -1,9 +1,8 @@
 package com.kamis.price.controller;
 
-import com.kamis.price.batch.kamis.dto.BatchConfigResponse;
-import com.kamis.price.batch.kamis.dto.BatchRunResponse;
-import com.kamis.price.batch.kamis.dto.BatchStatusResponse;
-import com.kamis.price.batch.kamis.service.BatchService;
+import com.kamis.price.batch.kamis.price.dto.BatchRunResponse;
+import com.kamis.price.batch.kamis.price.dto.BatchStatusResponse;
+import com.kamis.price.batch.kamis.price.service.BatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

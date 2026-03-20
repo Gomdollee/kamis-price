@@ -12,5 +12,6 @@ public class KamisDataDto {
 
     @JsonProperty("error_code")
     private String errorCode;
+
     private List<KamisItemDto> item;
 }

@@ -33,31 +33,15 @@ public class KamisApiService {
                 "N"
         );
 
-        validateResponse(response);
-
         return response;
     }
 
-    /**
-     * 응답 검증
-     */
-    public void validateResponse(KamisResponseDto response) {
+    public String getCertKey() {
+        return kamisApiProperties.getCertKey();
+    }
 
-        if (response == null) {
-            throw new RuntimeException("KAMIS API response is null");
-        }
-
-        if (response.getData() == null) {
-            throw new RuntimeException("KAMIS API data is null");
-        }
-
-        if (!"000".equals(response.getData().getErrorCode())) {
-            throw new RuntimeException("KAMIS API error: " + response.getData().getErrorCode());
-        }
-
-        if (response.getData().getItem() == null) {
-            throw new RuntimeException("KAMIS API item is null");
-        }
+    public String getCertId() {
+        return kamisApiProperties.getCertId();
     }
 
 }
