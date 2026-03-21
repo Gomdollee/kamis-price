@@ -170,7 +170,7 @@ public class PriceData {
                 .marketName(null)
                 .unit(item.getUnit())
                 .price(price)
-                .regDay(LocalDate.parse(item.getRegday()))
+                .regDay((item.getRegday()))
                 .priceType("DAY1")
                 .build();
     }

@@ -82,7 +82,7 @@ public class KamisProcessor implements ItemProcessor<KamisRawItem, List<PriceDat
                         .unit(item.getUnit())
                         .price(price)
                         .priceType(priceType)
-                        .regDay(LocalDate.parse(item.getRegday()))
+                        .regDay((item.getRegday()))
                         .build()
         );
     }

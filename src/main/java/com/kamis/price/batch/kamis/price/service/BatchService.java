@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class BatchService {
 
     private final JobLauncher jobLauncher;
@@ -25,7 +25,12 @@ public class BatchService {
     private final JobExplorer jobExplorer;
     private final KamisApiProperties kamisApiProperties;
 
-
+    public BatchService(JobLauncher jobLauncher, @Qualifier("kamisPriceJob") Job kamisPriceJob, JobExplorer jobExplorer, KamisApiProperties kamisApiProperties) {
+        this.jobLauncher = jobLauncher;
+        this.kamisPriceJob = kamisPriceJob;
+        this.jobExplorer = jobExplorer;
+        this.kamisApiProperties = kamisApiProperties;
+    }
 
 
     /**
