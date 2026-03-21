@@ -1,5 +1,6 @@
 package com.kamis.price.domain.raw.entity;
 
+import com.kamis.price.global.BaseEntity;
 import com.kamis.price.global.enums.RawStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "kamis_raw_request")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class KamisRawRequest {
+public class KamisRawRequest extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,9 +41,6 @@ public class KamisRawRequest {
 
     private int processingRetryCount;
     private String processingErrorMessage;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
     @Builder
     private KamisRawRequest(
