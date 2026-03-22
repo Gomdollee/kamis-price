@@ -1,10 +1,12 @@
-package com.kamis.price.batch.kamis.job;
+package com.kamis.price.batch.kamis.raw.job;
 
-import com.kamis.price.batch.kamis.listener.KamisStepListener;
+import com.kamis.price.batch.kamis.raw.listener.KamisStepListener;
+import com.kamis.price.batch.kamis.raw.partition.KamisPartitioner;
 import com.kamis.price.batch.kamis.raw.processor.KamisRawProcessor;
-import com.kamis.price.batch.kamis.raw.reader.KamisApiReader;
+import com.kamis.price.batch.kamis.raw.reader.KamisRawReader;
 import com.kamis.price.batch.kamis.raw.writer.KamisRawWriter;
 import com.kamis.price.domain.raw.entity.KamisRawItem;
+import com.kamis.price.domain.raw.entity.KamisRawRequest;
 import com.kamis.price.external.kamis.dto.KamisItemDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -23,7 +25,8 @@ public class KamisRawJobConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
-    private final KamisApiReader reader;
+    private final KamisPartitioner partitioner;
+    private final KamisRawReader reader;
     private final KamisRawProcessor processor;
     private final KamisRawWriter writer;
     private final KamisStepListener stepListener;
@@ -34,12 +37,24 @@ public class KamisRawJobConfig {
     @Bean
     public Job kamisRawJob() {
         return new JobBuilder("kamisRawJob", jobRepository)
-                .start(kamisRawStep())
+                .start(masterStep())   // 🔥 변경
                 .build();
     }
 
     /**
-     * Step 정의
+     * Master Step (Partition)
+     */
+    @Bean
+    public Step masterStep() {
+        return new StepBuilder("masterStep", jobRepository)
+                .partitioner("kamisRawStep", partitioner)
+                .step(kamisRawStep())
+                .gridSize(10)
+                .build();
+    }
+
+    /**
+     * 기존 Step 그대로 유지
      */
     @Bean
     public Step kamisRawStep() {
@@ -48,10 +63,8 @@ public class KamisRawJobConfig {
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)
-                .listener(stepListener) // request 생성 + API 호출
+                .listener(stepListener)
                 .faultTolerant()
-                .retryLimit(3)
-                .retry(Exception.class)
                 .skipLimit(10)
                 .skip(Exception.class)
                 .build();

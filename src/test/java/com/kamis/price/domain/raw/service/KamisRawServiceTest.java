@@ -1,13 +1,11 @@
 package com.kamis.price.domain.raw.service;
 
-import com.kamis.price.batch.kamis.job.KamisRawJobConfig;
+import com.kamis.price.batch.kamis.raw.job.KamisRawJobConfig;
 import com.kamis.price.batch.kamis.raw.processor.KamisRawProcessor;
 import com.kamis.price.external.kamis.dto.KamisRawCollectCommand;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.task.TaskSchedulingAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDate;

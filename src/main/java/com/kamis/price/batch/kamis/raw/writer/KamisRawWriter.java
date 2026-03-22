@@ -16,9 +16,12 @@ public class KamisRawWriter implements ItemWriter<KamisRawItem> {
     private final KamisRawItemRepository repository;
 
 
+    /**
+     * Raw item을 MySQL upsert로 저장합니다.
+     * 같은 조건(item_code, kind_code, rank_code, regday, country_code)이 있으면 갱신합니다.
+     */
     @Override
     public void write(Chunk<? extends KamisRawItem> items) {
-
         for (KamisRawItem item : items) {
             repository.upsert(
                     item.getRequest().getId(),

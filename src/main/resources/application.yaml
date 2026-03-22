@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/kamis
@@ -16,15 +19,8 @@ spring:
   batch:
     jdbc:
       initialize-schema: always
-
-#logging:
-#  level:
-#    com.kamis: DEBUG
-#    feign: DEBUG
-#    org.springframework.cloud.openfeign: DEBUG
-
-server:
-  port: 8080
+    job:
+      enabled: false
 
 kamis:
   api:
@@ -32,6 +28,3 @@ kamis:
     cert-key: 5a80d6c4-06de-4e55-96ed-baefbd3ace87
     cert-id: 2791
     mock-mode: false
-  batch:
-    schedule:
-      daily-cron: "0 0 9 * * *"

@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 /**
- *  수집용 DTO
+ *  수잡
  */
 @Getter
 @Builder

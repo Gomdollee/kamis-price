@@ -1,4 +1,4 @@
-package com.kamis.price.batch.kamis.job;
+package com.kamis.price.batch.kamis.price.job;
 
 
 import com.kamis.price.batch.kamis.price.processor.KamisProcessor;
