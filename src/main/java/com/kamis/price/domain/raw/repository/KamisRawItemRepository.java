@@ -1,12 +1,14 @@
 package com.kamis.price.domain.raw.repository;
 
 import com.kamis.price.domain.raw.entity.KamisRawItem;
+import com.kamis.price.global.enums.RawStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface KamisRawItemRepository extends JpaRepository<KamisRawItem, Long> {
@@ -88,4 +90,6 @@ public interface KamisRawItemRepository extends JpaRepository<KamisRawItem, Long
             @Param("day7") String day7,
             @Param("dpr7") String dpr7
     );
+
+    List<KamisRawItem> findByProcessingStatus(RawStatus status);
 }

@@ -24,7 +24,7 @@ public class KamisProcessor implements ItemProcessor<KamisRawItem, List<PriceDat
         List<PriceData> result = new ArrayList<>();
 
         // dpr1 ~ dpr7 각각 row 생성
-        add(result, item,   item.getDay1(), item.getDpr1());
+        add(result, item, item.getDay1(), item.getDpr1());
         add(result, item, item.getDay2(), item.getDpr2());
         add(result, item, item.getDay3(), item.getDpr3());
         add(result, item, item.getDay4(), item.getDpr4());
@@ -32,12 +32,7 @@ public class KamisProcessor implements ItemProcessor<KamisRawItem, List<PriceDat
         add(result, item, item.getDay6(), item.getDpr6());
         add(result, item, item.getDay7(), item.getDpr7());
 
-        // 👉 모든 값이 null이면 skip
-        if (result.isEmpty()) {
-            return null;
-        }
-
-        return result;
+        return result.isEmpty() ? null : result;
     }
 
     /**

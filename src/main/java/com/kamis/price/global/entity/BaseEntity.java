@@ -1,4 +1,4 @@
-package com.kamis.price.global;
+package com.kamis.price.global.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

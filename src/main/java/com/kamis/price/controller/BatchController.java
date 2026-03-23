@@ -18,18 +18,11 @@ public class BatchController {
     /**
      * 배치 수동 실행
      *
-     * POST /api/batch/run?itemCategoryCode=200&regDay=2024-01-15
+     * POST /api/batch/run
      */
     @PostMapping("/run")
-    public BatchRunResponse runBatch(
-            @RequestParam(name = "itemCategoryCode", defaultValue = "200") String itemCategoryCode,
-            @RequestParam(name = "regDay", required = false) String regDay
-    ) {
-        if (regDay == null || regDay.isBlank()) {
-            regDay = LocalDate.now().toString();
-        }
-
-        return batchService.runBatch(itemCategoryCode, regDay);
+    public BatchRunResponse runBatch() {
+        return batchService.runBatch();
     }
 
     /**

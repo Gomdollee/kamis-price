@@ -1,6 +1,6 @@
 package com.kamis.price.domain.raw.entity;
 
-import com.kamis.price.global.BaseEntity;
+import com.kamis.price.global.entity.BaseEntity;
 import com.kamis.price.global.enums.RawStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

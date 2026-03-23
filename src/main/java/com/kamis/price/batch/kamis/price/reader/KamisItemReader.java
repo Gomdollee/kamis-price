@@ -8,6 +8,7 @@ import com.kamis.price.external.kamis.service.KamisApiService;
 import com.kamis.price.global.enums.CategoryCode;
 import com.kamis.price.global.enums.CountryCode;
 import com.kamis.price.global.enums.ProductClsCode;
+import com.kamis.price.global.enums.RawStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -42,21 +43,13 @@ public class KamisItemReader implements ItemReader<KamisRawItem> {
     @Override
     public KamisRawItem read() {
 
-        // 최초 1회만 DB 조회
         if (iterator == null) {
-            log.info("Raw 데이터 조회 시작");
+            log.info("PROCESSED Raw 데이터 조회 시작");
 
-            iterator = repository.findAll().iterator();
-            // 👉 나중에 이렇게 변경
-            // repository.findByProcessingStatus(RawStatus.READY)
+            iterator = repository.findByProcessingStatus(RawStatus.PROCESSED).iterator();
         }
 
-        if (iterator.hasNext()) {
-            return iterator.next();
-        }
-
-        // 데이터 끝
-        return null;
+        return iterator.hasNext() ? iterator.next() : null;
     }
 }
 

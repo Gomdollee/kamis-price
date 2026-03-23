@@ -25,7 +25,10 @@ public class PriceWriter implements ItemWriter<List<PriceData>> {
                 .flatMap(List::stream)
                 .toList();
 
-        // DB 저장
+        if (flatList.isEmpty()) {
+            return;
+        }
+
         repository.saveAll(flatList);
     }
 }

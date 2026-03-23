@@ -21,29 +21,33 @@ import java.util.Map;
 public class BatchService {
 
     private final JobLauncher jobLauncher;
-    private final Job kamisPriceJob;
     private final JobExplorer jobExplorer;
     private final KamisApiProperties kamisApiProperties;
 
-    public BatchService(JobLauncher jobLauncher, @Qualifier("kamisPriceJob") Job kamisPriceJob, JobExplorer jobExplorer, KamisApiProperties kamisApiProperties) {
+    private final Job kamisPriceJob;
+
+    public BatchService(
+            JobLauncher jobLauncher,
+            @Qualifier("kamisPriceJob") Job kamisPriceJob,
+            JobExplorer jobExplorer,
+            KamisApiProperties kamisApiProperties
+    ) {
         this.jobLauncher = jobLauncher;
         this.kamisPriceJob = kamisPriceJob;
         this.jobExplorer = jobExplorer;
         this.kamisApiProperties = kamisApiProperties;
     }
 
-
     /**
      * 배치 실행
      */
-    public BatchRunResponse runBatch(String itemCategoryCode, String regDay) {
+    public BatchRunResponse runBatch() {
 
         try {
 
             JobParameters parameters =
                     new JobParametersBuilder()
-                            .addString("itemCategoryCode", itemCategoryCode)
-                            .addString("regDay", regDay)
+                            .addLong("timestamp", System.currentTimeMillis())
                             .toJobParameters();
 
             JobExecution execution = jobLauncher.run(kamisPriceJob, parameters);
@@ -55,8 +59,6 @@ public class BatchService {
                     .status(execution.getStatus().name())
                     .startTime(execution.getStartTime())
                     .endTime(execution.getEndTime())
-                    .itemCategoryCode(itemCategoryCode)
-                    .regDay(regDay)
                     .mockMode(kamisApiProperties.isMockMode())
                     .build();
 
@@ -70,11 +72,10 @@ public class BatchService {
     }
 
     /**
-     * 배치 실행 이력 조회
+     * 🔥 배치 실행 이력 조회 (복구)
      */
     public BatchStatusResponse getBatchStatus() {
 
-        // 최근 JobInstance 조회 (최대10개)
         List<JobInstance> instances =
                 jobExplorer.getJobInstances("kamisPriceJob", 0, 10);
 
@@ -86,7 +87,6 @@ public class BatchService {
                     jobExplorer.getJobExecutions(instance);
 
             for (JobExecution execution : executions) {
-
                 data.add(convertToDto(instance, execution));
             }
         }
@@ -121,23 +121,5 @@ public class BatchService {
                 .params(params)
                 .build();
     }
-
-    /**
-     * API 설정 조회
-     */
-    public BatchConfigResponse getBatchConfig() {
-
-        return BatchConfigResponse.builder()
-                .apiConfigured(kamisApiProperties.isConfigured())
-                .mockMode(kamisApiProperties.isMockMode())
-                .baseUrl(kamisApiProperties.getBaseUrl())
-                .certKeySet(kamisApiProperties.getCertKey() != null)
-                .certIdSet(kamisApiProperties.getCertId() != null)
-                .build();
-    }
-
-
 }
-
-
 
