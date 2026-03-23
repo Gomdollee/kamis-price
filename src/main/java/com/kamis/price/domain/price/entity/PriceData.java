@@ -61,7 +61,7 @@ public class PriceData {
     /**
      * 등급
      */
-    @Column(name = "rank")
+    @Column(name = "rank_name")
     private String rank;
 
     /**
