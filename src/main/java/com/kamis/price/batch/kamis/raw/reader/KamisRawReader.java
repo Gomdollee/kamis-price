@@ -19,6 +19,10 @@ public class KamisRawReader implements ItemReader<KamisItemDto>, StepExecutionLi
 
     private Iterator<KamisItemDto> iterator;
 
+    /**
+     * beforeStep에서 StepExecutionContext 안의 items를 꺼내 iterator로 준비
+     * API 호출 책임은 listener로 분리해서 step 시작 시 1번만 실행되도록 함
+     */
     @Override
     public void beforeStep(StepExecution stepExecution) {
 

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 
 @Component
-@StepScope
+@StepScope // step 실행 시점마다 새로 생성되는 스코프. stepExecutionContext / jobParameters 값을 안전하게 주입받기 위해 사용
 @RequiredArgsConstructor
 public class KamisRawProcessor implements ItemProcessor<KamisItemDto, KamisRawItem>, StepExecutionListener {
 
@@ -36,7 +36,10 @@ public class KamisRawProcessor implements ItemProcessor<KamisItemDto, KamisRawIt
     private String regday;
 
     /**
-     * listener에서 만든 request를 조회해 현재 step에 연결
+     * listener가 미리 저장해둔 requestId를 바탕으로 request 엔티티 조회
+     *
+     * - processor는 각 item을 entity로 만들 때 request 객체가 필요함
+     * - request_id만 context에 싣고, 실제 엔티티는 processor에서 조회하는 구조
      */
     @Override
     public void beforeStep(StepExecution stepExecution) {
@@ -49,6 +52,17 @@ public class KamisRawProcessor implements ItemProcessor<KamisItemDto, KamisRawIt
         this.request = requestRepository.findById(requestId).orElseThrow();
     }
 
+
+    /**
+     * process = DTO → Entity 변환 담당
+     *
+     * 여기서는 비즈니스 계산을 거의 하지 않고
+     * 원본 item을 raw entity 형태로 옮기는 역할에 집중함
+     *
+     * request == null 이면
+     * - 현재 partition은 처리할 데이터가 없는 상태
+     * - null 반환하면 writer까지 가지 않고 skip됨
+     */
     @Override
     public KamisRawItem process(KamisItemDto item) {
 

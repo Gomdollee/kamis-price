@@ -13,6 +13,7 @@ import java.util.Optional;
 
 public interface KamisRawItemRepository extends JpaRepository<KamisRawItem, Long> {
 
+    // ===== 중복 체크 =====
     boolean existsByItemCodeAndKindCodeAndRankCodeAndRegdayAndCountryCode(
             String itemCode,
             String kindCode,
@@ -21,6 +22,7 @@ public interface KamisRawItemRepository extends JpaRepository<KamisRawItem, Long
             String countryCode
     );
 
+    // ===== 단건 조회 =====
     Optional<KamisRawItem> findByItemCodeAndKindCodeAndRankCodeAndRegdayAndCountryCode(
             String itemCode,
             String kindCode,
@@ -91,5 +93,6 @@ public interface KamisRawItemRepository extends JpaRepository<KamisRawItem, Long
             @Param("dpr7") String dpr7
     );
 
+    // 상태 기반 조회
     List<KamisRawItem> findByProcessingStatus(RawStatus status);
 }

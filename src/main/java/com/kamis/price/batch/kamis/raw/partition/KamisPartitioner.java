@@ -29,6 +29,7 @@ public class KamisPartitioner implements Partitioner {
             for (CategoryCode category : CategoryCode.values()) {
                 for (CountryCode country : CountryCode.values()) {
 
+                    // worker step이 현재 어떤 조건을 처리 중인지 알 수 있도록 context에 주입
                     ExecutionContext context = new ExecutionContext();
                     context.putString("productClsCode", productCls.getCode());
                     context.putString("categoryCode", category.getCode());

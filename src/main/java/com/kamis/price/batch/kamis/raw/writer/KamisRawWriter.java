@@ -17,8 +17,14 @@ public class KamisRawWriter implements ItemWriter<KamisRawItem> {
 
 
     /**
-     * Raw item을 MySQL upsert로 저장합니다.
-     * 같은 조건(item_code, kind_code, rank_code, regday, country_code)이 있으면 갱신합니다.
+     * writer는 최종 저장 담당
+     * upsert 사용 이유
+     * - 같은 데이터가 다시 들어와도 중복 insert를 막기 위해
+     * - 배치 재실행 시에도 안전하게 같은 키 기준으로 update 되게 하기 위해
+     * - 즉, 멱등성을 보장하기 위해
+     *
+     * 현재 unique key 기준:
+     * item_code + kind_code + rank_code + regday + country_code
      */
     @Override
     public void write(Chunk<? extends KamisRawItem> items) {

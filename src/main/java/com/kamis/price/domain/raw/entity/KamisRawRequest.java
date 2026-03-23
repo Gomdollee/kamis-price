@@ -21,26 +21,29 @@ public class KamisRawRequest extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // ===== API 요청 파라미터 =====
     private String productClsCode;
     private String countryCode;
     private LocalDate regday;
     private String convertKgYn;
     private String categoryCode;
 
+    // ===== 인증 정보 =====
     private String certKey;
     private String certId;
     private String returnType;
 
-    private String errorCode;
+    // ===== 응답 결과 =====
+    private String errorCode; // API 에러 코드
 
     @Lob
-    private String rawJson;
+    private String rawJson; // 원본 JSON (디버깅 / 재처리용)
 
     @Enumerated(EnumType.STRING)
-    private RawStatus processingStatus;
+    private RawStatus processingStatus; // READY / PROCESSED / FAILED
 
-    private int processingRetryCount;
-    private String processingErrorMessage;
+    private int processingRetryCount; // 재시도 횟수
+    private String processingErrorMessage; // 에러 메시지
 
     @Builder
     private KamisRawRequest(
@@ -77,6 +80,7 @@ public class KamisRawRequest extends BaseEntity {
         this.updatedAt = updatedAt;
     }
 
+    // ===== 생성 팩토리 메서드 =====
     public static KamisRawRequest create(
             String productClsCode,
             String categoryCode,
@@ -103,6 +107,7 @@ public class KamisRawRequest extends BaseEntity {
                 .build();
     }
 
+    // ===== 성공 처리 =====
     public void complete(String errorCode, String rawJson) {
         this.errorCode = errorCode;
         this.rawJson = rawJson;
@@ -110,6 +115,7 @@ public class KamisRawRequest extends BaseEntity {
         this.updatedAt = LocalDateTime.now();
     }
 
+    // ===== 실패 처리 =====
     public void markFailed(String message) {
         this.processingStatus = RawStatus.FAILED;
         this.processingRetryCount++;

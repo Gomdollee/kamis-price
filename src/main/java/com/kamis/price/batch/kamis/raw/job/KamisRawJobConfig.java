@@ -32,7 +32,15 @@ public class KamisRawJobConfig {
     private final KamisStepListener stepListener;
 
     /**
-     * Job 정의
+     * Job = 배치 작업 전체 단위
+     *
+     * 이 프로젝트에서는 "KAMIS 원본 데이터를 수집하는 전체 작업" 자체가 하나의 Job
+     *
+     * 흐름:
+     * kamisRawJob
+     *   -> masterStep
+     *        -> partitioner가 여러 partition 생성
+     *        -> 각 partition마다 kamisRawStep 실행
      */
     @Bean
     public Job kamisRawJob() {
@@ -42,7 +50,20 @@ public class KamisRawJobConfig {
     }
 
     /**
-     * Master Step (Partition)
+     * masterStep = 실제 데이터 처리 step을 병렬로 나눠서 실행시키는 상위 step
+     *
+     * partitioner("kamisRawStep", partitioner)
+     * - kamisRawStep 이라는 worker step을
+     * - partitioner가 생성한 execution context 개수만큼 분리 실행
+     *
+     * gridSize(10)
+     * - 병렬 실행 힌트 값
+     * - 보통 동시에 처리할 스레드 수 또는 분할 규모
+     * - 단, 실제 병렬 실행 여부는 TaskExecutor 설정 유무에도 영향 받음
+     *
+     * 중요:
+     * 코드는 partitioner + gridSize를 사용하고 있으므로
+     * "논리적으로 partition 적용은 되어 있음"
      */
     @Bean
     public Step masterStep() {
@@ -54,7 +75,7 @@ public class KamisRawJobConfig {
     }
 
     /**
-     * 기존 Step 그대로 유지
+     * kamisRawStep = 각 partition이 실제로 수행하는 작업 step
      */
     @Bean
     public Step kamisRawStep() {
