@@ -1,30 +1,3 @@
-server:
-  port: 8080
-
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/kamis
-    username: kamis-mysql
-    password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-
-  batch:
-    jdbc:
-      initialize-schema: always
-    job:
-      enabled: false
-
-kamis:
-  api:
-    base-url: https://www.kamis.or.kr
-    cert-key: 5a80d6c4-06de-4e55-96ed-baefbd3ace87
-    cert-id: 2791
-    mock-mode: false
+  profiles:
+    active: local
