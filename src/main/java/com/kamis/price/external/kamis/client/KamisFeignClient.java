@@ -26,8 +26,6 @@ public interface KamisFeignClient {
     KamisResponseDto getPriceList(
 
             @RequestParam("action") String action,
-            @RequestParam("p_cert_key") String certKey,                     // 인증키
-            @RequestParam("p_cert_id") String certId,                       // 인증ID
             @RequestParam("p_returntype") String returnType,                // 응답타입 (json)
             @RequestParam("p_product_cls_code") String productClsCode,      // 도매/소매 구분
             @RequestParam("p_item_category_code") String categoryCode,      // 품목 카테고리

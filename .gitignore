@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# 환경 변수
+.env
+
+# 운영 환경
+application-prod.yaml
+application-dev.yaml

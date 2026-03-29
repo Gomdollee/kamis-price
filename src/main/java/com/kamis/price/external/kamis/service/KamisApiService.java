@@ -23,8 +23,6 @@ public class KamisApiService {
 
         KamisResponseDto response = kamisFeignClient.getPriceList(
                 "dailyPriceByCategoryList",
-                kamisApiProperties.getCertKey(),
-                kamisApiProperties.getCertId(),
                 "json",
                 productClsCode,
                 categoryCode,

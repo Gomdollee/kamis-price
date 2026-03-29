@@ -2,6 +2,7 @@ package com.kamis.price.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Logger;
+import feign.RequestInterceptor;
 import feign.codec.Decoder;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
@@ -22,6 +23,14 @@ import java.util.List;
  */
 @Configuration
 public class FeignConfig {
+
+    @Bean
+    public RequestInterceptor kamisAuthInterceptor(KamisApiProperties properties) {
+        return requestTemplate -> {
+            requestTemplate.query("p_cert_key", properties.getCertKey());
+            requestTemplate.query("p_cert_id", properties.getCertId());
+        };
+    }
 
     /**
      * Feign Decoder 설정

@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/kamis
+    username: kamis-mysql
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none   # 운영 안정성
+    show-sql: true     # 디버깅
+    properties:
+      hibernate:
+        format_sql: true
+
+  batch:
+    jdbc:
+      initialize-schema: always   # Batch 테이블 생성
+    job:
+      enabled: false              # 자동 실행 방지
+
+kamis:
+  api:
+    base-url: https://www.kamis.or.kr
+    cert-key: ${KAMIS_CERT_KEY}
+    cert-id: ${KAMIS_CERT_ID}
+    mock-mode: false

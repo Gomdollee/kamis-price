@@ -24,8 +24,4 @@ public class KamisApiProperties {
     private String certId; // 인증 ID
     private boolean mockMode;  // Mock 모드 여부
 
-    // API 설정이 완료되었는지 체크
-    public boolean isConfigured() {
-        return certKey != null && certId != null;
-    }
 }
